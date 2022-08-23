@@ -61,7 +61,25 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
     const props = this.props;
     const { mode } = props;
     let newValue = cloneDate(this.getDate());
-    if (mode === DATETIME || mode === DATE || mode === YEAR || mode === MONTH) {
+    if (mode === DATETIME) {
+      switch (index) {
+        case 0:
+          const newDate = new Date(value);
+          newValue = new Date(newDate.getTime());
+          break;
+        case 1:
+          this.setHours(newValue, value);
+          break;
+        case 2:
+          newValue.setMinutes(value);
+          break;
+        case 3:
+          this.setAmPm(newValue, value);
+          break;
+        default:
+          break;
+      }
+    } else if (mode === DATE || mode === YEAR || mode === MONTH) {
       switch (index) {
         case 0:
           newValue.setFullYear(value);
@@ -220,71 +238,25 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
   }
 
   getDateData() {
-    const { locale, formatMonth, formatDay, mode } = this.props;
+    const { formatMonth } = this.props;
     const date = this.getDate();
-    const selYear = date.getFullYear();
-    const selMonth = date.getMonth();
-    const minDateYear = this.getMinYear();
-    const maxDateYear = this.getMaxYear();
-    const minDateMonth = this.getMinMonth();
-    const maxDateMonth = this.getMaxMonth();
-    const minDateDay = this.getMinDay();
-    const maxDateDay = this.getMaxDay();
-    const years: any[] = [];
-    for (let i = minDateYear; i <= maxDateYear; i++) {
-      years.push({
-        value: i + '',
-        label: i + locale.year + '',
-      });
-    }
-    const yearCol = { key: 'year', props: { children: years } };
-    if (mode === YEAR) {
-      return [yearCol];
-    }
-
-    const months: any[] = [];
-    let minMonth = 0;
-    let maxMonth = 11;
-    if (minDateYear === selYear) {
-      minMonth = minDateMonth;
-    }
-    if (maxDateYear === selYear) {
-      maxMonth = maxDateMonth;
-    }
-    for (let i = minMonth; i <= maxMonth; i++) {
-      const label = formatMonth ? formatMonth(i, date) : (i + 1 + locale.month + '');
-      months.push({
-        value: i + '',
-        label,
-      });
-    }
-    const monthCol = { key: 'month', props: { children: months } };
-    if (mode === MONTH) {
-      return [yearCol, monthCol];
-    }
-
     const days: any[] = [];
-    let minDay = 1;
-    let maxDay = getDaysInMonth(date);
-
-    if (minDateYear === selYear && minDateMonth === selMonth) {
-      minDay = minDateDay;
+    if (this.getMinDate().getTime() > this.getMaxDate().getTime()) {
+      return [{ key: 'day', props: { children: days } }];
     }
-    if (maxDateYear === selYear && maxDateMonth === selMonth) {
-      maxDay = maxDateDay;
-    }
-    for (let i = minDay; i <= maxDay; i++) {
-      const label = formatDay ? formatDay(i, date) : (i + locale.day + '');
+    const minDate = new Date(this.getMinDate().getTime());
+    minDate.setHours(0, 0, 0, 0);
+    const minTimestamp = minDate.getTime();
+    const maxTimestamp = this.getMaxDate().getTime();
+    for (let i = minTimestamp; i <= maxTimestamp; i += 86400000) {
+      const dt = new Date(i);
+      const label = formatMonth ? formatMonth(i, dt) : (dt.toString());
       days.push({
         value: i + '',
         label,
       });
     }
-    return [
-      yearCol,
-      monthCol,
-      { key: 'day', props: { children: days } },
-    ];
+    return [{ key: 'day', props: { children: days } }];
   }
 
   getDisplayHour(rawHour) {
@@ -423,23 +395,11 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
     let cols: any[] = [];
     let value: any[] = [];
 
-    if (mode === YEAR) {
-      return {
-        cols: this.getDateData(),
-        value: [date.getFullYear() + ''],
-      };
-    }
-
-    if (mode === MONTH) {
-      return {
-        cols: this.getDateData(),
-        value: [date.getFullYear() + '', date.getMonth() + ''],
-      };
-    }
-
-    if (mode === DATETIME || mode === DATE) {
+    if (mode === DATETIME) {
       cols = this.getDateData();
-      value = [date.getFullYear() + '', date.getMonth() + '', date.getDate() + ''];
+      const zeroHourDate = new Date(date.getTime());
+      zeroHourDate.setHours(0, 0, 0, 0);
+      value = [zeroHourDate.getTime() + ''];
     }
 
     if (mode === DATETIME || mode === TIME) {
