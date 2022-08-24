@@ -239,7 +239,6 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
 
   getDateData() {
     const { formatMonth } = this.props;
-    const date = this.getDate();
     const days: any[] = [];
     if (this.getMinDate().getTime() > this.getMaxDate().getTime()) {
       return [{ key: 'day', props: { children: days } }];

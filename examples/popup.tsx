@@ -1,7 +1,7 @@
 /* tslint:disable:no-console */
 
 import 'rmc-picker/assets/index.css';
-import 'rmc-date-picker/assets/index.less';
+import '@rushowl/react-native-single-date-picker/assets/index.less';
 import 'rmc-picker/assets/popup.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

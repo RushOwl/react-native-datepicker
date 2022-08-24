@@ -1,6 +1,6 @@
 {
   "name": "@rushowl/react-native-single-date-picker",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React Mobile DatePicker Component for web and react-native",
   "keywords": [
     "react",
@@ -11,7 +11,7 @@
   "homepage": "https://github.com/RushOwl/react-native-single-date-picker",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RushOwl/react-native-single-date-picker.git"
+    "url": "git+https://github.com/RushOwl/react-native-single-date-picker.git"
   },
   "bugs": {
     "url": "https://github.com/react-component/m-date-picker/issues"
@@ -36,7 +36,7 @@
     "prepublish": "rc-tools run guard",
     "prepare": "rc-tools run guard",
     "prepublishOnly": "rc-tools run guard",
-    "pub": "rc-tools run pub --babel-runtime",
+    "pub": "rc-tools run pub --babel-runtime --access public",
     "lint": "rc-tools run lint --no-js-lint",
     "test": "jest",
     "coverage": "jest --coverage",
@@ -80,5 +80,13 @@
   "dependencies": {
     "babel-runtime": "6.x",
     "rmc-picker": "~5.0.0"
+  },
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "author": "",
+  "resolutions": {
+    "graceful-fs": "^4.2.10"
   }
 }
