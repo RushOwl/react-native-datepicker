@@ -316,7 +316,8 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
     const hours: any[] = [];
     if (minHour === 0 && maxHour === 0 || minHour !== 0 && maxHour !== 0) {
       minHour = this.getDisplayHour(minHour);
-    } else if (minHour === 0 && use12Hours) {
+    }
+    if ((minHour === 0 || minHour === 12) && use12Hours) {
       minHour = 1;
       hours.push({ value: '0', label: locale.hour ? '12' + locale.hour : '12' });
     }
