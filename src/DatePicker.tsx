@@ -280,6 +280,10 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
     const minDateHour = this.getMinHour();
     const maxDateHour = this.getMaxHour();
     const hour = date.getHours();
+    let isNext12Hours = false;
+    if (use12Hours && hour >= 12) {
+      isNext12Hours = true;
+    }
     if (mode === DATETIME) {
       const year = date.getFullYear();
       const month = date.getMonth();
@@ -316,6 +320,9 @@ class DatePicker extends React.Component<IDatePickerProps, any> {
     const hours: any[] = [];
     if (minHour === 0 && maxHour === 0 || minHour !== 0 && maxHour !== 0) {
       minHour = this.getDisplayHour(minHour);
+    }
+    if (isNext12Hours) {
+      minHour = Math.min(minHour, 0)
     }
     if ((minHour === 0 || minHour === 12) && use12Hours) {
       minHour = 1;
